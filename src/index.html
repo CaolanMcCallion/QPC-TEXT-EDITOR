@@ -1,126 +1,230 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>QUBeditotron3000</title>
+    <title>QUBeditotron3000</title>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-let wordcountURL = "http://wordcount.editor.qpc.qubcloud.uk";
-let charcountURL = "http://charcount.editor.qpc.qubcloud.uk";
+        let wordcountURL = "http://wordcount.editor.qpc.qubcloud.uk";
+        let charcountURL = "http://charcount.editor.qpc.qubcloud.uk";
+        // Local URL for the microservices
+        let vowelcountURL = "http://localhost:8080";
+        let avgwordURL = "http://localhost:8081";
+        let puncCountURL = "http://localhost:8082";
+        let longestwordURL = "http://localhost:8083";
 
 
-function Wordcount()
-{
+
+
+        function Wordcount() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var j = JSON.parse(this.response);
+                    document.getElementById('output').value = j.answer;
+                }
+            };
+
+            let url = wordcountURL + "/?text=" + encodeURI(document.getElementById('content').value);
+            xhttp.open("GET", url);
+            xhttp.send();
+        }
+
+        function Charcount() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var j = JSON.parse(this.response);
+                    document.getElementById('output').value = j.answer;
+                }
+            };
+
+            let url = charcountURL + "/?text=" + encodeURI(document.getElementById('content').value);
+            xhttp.open("GET", url);
+            xhttp.send();
+        }
+        // Function to count the number of vowels in the input text
+        function Vowelcount() {
+            let xhttp = new XMLHttpRequest();
+            // When the response is ready and works
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Parse the JSON response from backend
+                    var j = JSON.parse(this.response);
+                    // Display the 'description' field in the output box
+                    document.getElementById('output').value = j.description;
+                }
+            };
+
+            // Build the request URL using the text from input box
+            let url = vowelcountURL + "/?text=" + encodeURI(document.getElementById('content').value);
+            // Send a GET request to the backend service
+            xhttp.open("GET", url);
+            xhttp.send();
+        }
+
+        // Function that sends a GET request to the avg word length service I made
+
+        function AvgWordLength() {
+            // Creates a new XMLHttpRequest object
+            let xhttp = new XMLHttpRequest();
+            // Defines what happens when the server response is ready
+            xhttp.onreadystatechange = function () {
+                // Checks if the request is complete and works
+                if (this.readyState == 4 && this.status == 200) {
+                    // Parses the JSON response from the backend
+                    var j = JSON.parse(this.response);
+                    // Displays the result in the output
+                document.getElementById('output').value = j.result;
+                }
+            };
+             // Builds the full URL for the function
+            let url = avgwordURL + "/?text=" + encodeURI(document.getElementById('content').value);
+            // Configures the GET request
+            xhttp.open("GET", url);
+            // Sends the request to the backend
+            xhttp.send();
+        }
+
+
+       // Function that sends a GET request to the punctuation count service I made
+    function PuncCount() {
+        // Creates a new XMLHttpRequest object
+        let xhttp = new XMLHttpRequest();
+
+        // Defines what happens when the server response is ready
+        xhttp.onreadystatechange = function () {
+            // Checks if the request is complete and works
+            if (this.readyState == 4 && this.status == 200) {
+                // Parses the JSON response from the backend
+                var j = JSON.parse(this.response);
+                // Displays the result only in the output
+                document.getElementById('output').value = j.result;
+            }
+        };
+
+        // Builds the full URL for the punctuation count function
+        let url = puncCountURL + "/?text=" + encodeURI(document.getElementById('content').value);
+        // Configures the GET request
+        xhttp.open("GET", url);
+        // Sends the request to the backend
+        xhttp.send();
+    }
+
+   // Function that sends a GET request to the longest word service I made
+function LongestWord() {
+    // Creates a new XMLHttpRequest object
     let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
+
+    // Defines what happens when the server response is ready
+    xhttp.onreadystatechange = function () {
+        // Checks if the request is complete and works
         if (this.readyState == 4 && this.status == 200) {
+            // Parses the JSON response from the backend
             var j = JSON.parse(this.response);
-            document.getElementById('output').value = j.answer;
+            // Displays the result only in the output
+            document.getElementById('output').value = j.result;
         }
     };
 
-    let url = wordcountURL + "/?text=" + encodeURI(document.getElementById('content').value);
-    xhttp.open("GET",url);
+    // Builds the full URL for the longest word function
+    let url = longestwordURL + "/?text=" + encodeURI(document.getElementById('content').value);
+    // Configures the GET request
+    xhttp.open("GET", url);
+    // Sends the request to the backend
     xhttp.send();
 }
 
-function Charcount()
-{
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var j = JSON.parse(this.response);
-            document.getElementById('output').value = j.answer;
+
+
+
+    </script>
+
+    <style type="text/css">
+        body {
+            font-size: 150%;
+            font-family: monospace;
         }
-    };
 
-    let url = charcountURL + "/?text=" + encodeURI(document.getElementById('content').value);
-    xhttp.open("GET",url);
-    xhttp.send();
-}
+        #logo {
+            font-family: Calibri, sans-serif;
+            font-weight: lighter;
+            color: #505050;
+            margin: 0.5em;
+        }
 
+        #editor {
+            text-align: center;
+            margin-top: 1em;
+        }
 
-</script>
+        #output {
+            font-size: 100%;
+            padding: 0.2em;
+            margin: 0.2em;
+            font-family: monospace;
+            letter-spacing: 0.1em;
+        }
 
-<style type="text/css">
-body  {
-    font-size: 150%;
-    font-family: monospace;
-}
+        #content {
+            font-size: 100%;
+            padding: 0.2em;
+            margin: 0.2em;
+            font-family: monospace;
+            letter-spacing: 0.1em;
+        }
 
-#logo
-{
-    font-family: Calibri, sans-serif;
-    font-weight: lighter;
-    color: #505050;
-    margin: 0.5em;
-}
-
-#editor
-{
-    text-align: center;
-    margin-top: 1em;
-}
-
-#output {
-    font-size: 100%;
-    padding: 0.2em;
-    margin: 0.2em;
-    font-family: monospace;
-    letter-spacing: 0.1em;
-}
-
-#content {
-    font-size: 100%;
-    padding: 0.2em;
-    margin: 0.2em;
-    font-family: monospace;
-    letter-spacing: 0.1em;
-}
-
-.operation {
-    border: solid #d0d0d0 1px;
-    background-color: #f0f0f0;
-    padding: 1.5em;
-    margin: 1em;
-    width: 14em;
-}
-</style>
+        .operation {
+            border: solid #d0d0d0 1px;
+            background-color: #f0f0f0;
+            padding: 1.5em;
+            margin: 1em;
+            width: 14em;
+        }
+    </style>
 
 </head>
+
 <body>
-<div id="editor">
-    <div id="logo">
-        QUBeditotron3000
+    <div id="editor">
+        <div id="logo">
+            QUBeditotron3000
+        </div>
+        <div>
+            <textarea rows="5" cols="40" id="content">It was the best of cloud, it was the worst of cloud...</textarea>
+        </div>
+        <div>
+            <input type="text" id="output" readonly="1" value="" />
+        </div>
+        <div>
+            <button class="operation" onclick="Wordcount();">Word Count</button>
+            <button class="operation" onclick="Charcount();">Character Count</button>
+            <button class="operation" onclick="AvgWordLength();">Avg Word Length</button>
+            <button class="operation" onclick="PuncCount();">Punctuation Count</button>
+            <button class="operation" onclick="LongestWord();">Longest Word</button>
+
+
+        </div>
+        <div>
+            <button class="operation" onclick="Vowelcount();">Vowel Count</button>
+            <button class="operation" onclick="">??</button>
+        </div>
+        <div>
+            <button class="operation" onclick="">??</button>
+            <button class="operation" onclick="">??</button>
+        </div>
+        <div>
+            <button class="operation" onclick="">??</button>
+            <button class="operation" onclick="">??</button>
+        </div>
+        <div>
+            <button class="operation" onclick="">??</button>
+            <button class="operation" onclick="">??</button>
+        </div>
+
+
     </div>
-    <div>
-        <textarea rows="5" cols="40" id="content">It was the best of cloud, it was the worst of cloud...</textarea>
-    </div>
-    <div>
-        <input type="text" id="output" readonly="1" value="" />
-    </div>
-    <div>
-        <button class="operation" onclick="Wordcount();">Word Count</button>
-        <button class="operation" onclick="Charcount();">Character Count</button>
-    </div>
-    <div>
-        <button class="operation" onclick="">??</button>
-        <button class="operation" onclick="">??</button>
-    </div>
-    <div>
-        <button class="operation" onclick="">??</button>
-        <button class="operation" onclick="">??</button>
-    </div>
-    <div>
-        <button class="operation" onclick="">??</button>
-        <button class="operation" onclick="">??</button>
-    </div>
-    <div>
-        <button class="operation" onclick="">??</button>
-        <button class="operation" onclick="">??</button>
-    </div>
-    
-</div>
 </body>
 
 
