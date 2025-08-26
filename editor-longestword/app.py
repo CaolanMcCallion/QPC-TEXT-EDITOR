@@ -21,6 +21,8 @@ def longest_word():
         "result": result
     })
 
-# Run the app on port 80 (inside the container)
+# Runs the app on port 80 (inside the container)
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80)
+
+# Added this line to test git commits
