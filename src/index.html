@@ -46,6 +46,26 @@
           return true;
         }
 
+        // --- STATEFUL SAVING FEATURE ---
+        // restore saved text into the textarea when the page loads
+        window.onload = function() {
+            const savedText = localStorage.getItem("editorContent");
+            if (savedText) {
+                document.getElementById("content").value = savedText;
+            }
+        };
+
+        // every time the user types, save the text into localStorage
+        function saveState() {
+            const currentText = document.getElementById("content").value;
+            localStorage.setItem("editorContent", currentText);
+        }
+        // attach event listener for typing into textarea
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("content").addEventListener("input", saveState);
+        });
+        // --------------------------------
+
         function Wordcount() {
             if (!ensure(wordcountURL, "Wordcount")) return;
             let xhttp = new XMLHttpRequest();
@@ -78,28 +98,21 @@
         function Vowelcount() {
             if (!ensure(vowelcountURL, "Vowelcount")) return;
             let xhttp = new XMLHttpRequest();
-            // When the response is ready and works
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4) {
                     try {
-                        // Parse whatever JSON came back
                         var j = JSON.parse(this.response);
                         if (this.status == 200) {
-                            // Display the 'description' field in the output box
                             document.getElementById('output').value = j.description;
                         } else {
-                            // Display the 'error' field if available, otherwise show generic message
                             document.getElementById('output').value = j.error || "Service error";
                         }
                     } catch (e) {
-                        // If the response isn’t JSON, show a fallback message
                         document.getElementById('output').value = "Unexpected error";
                     }
                 }
             };
-            // Build the request URL using the text from input box
             let url = vowelcountURL + "/?text=" + encodeURI(document.getElementById('content').value);
-            // Send a GET request to the backend service
             xhttp.open("GET", url);
             xhttp.send();
         }
@@ -107,75 +120,52 @@
         // Function that sends a GET request to the avg word length service I made
         function AvgWordLength() {
             if (!ensure(avgwordURL, "AvgWordLength")) return;
-            // Creates a new XMLHttpRequest object
             let xhttp = new XMLHttpRequest();
-            // Defines what happens when the server response is ready
             xhttp.onreadystatechange = function () {
-                // Checks if the request is complete and works
                 if (this.readyState == 4 && this.status == 200) {
-                    // Parses the JSON response from the backend
                     var j = JSON.parse(this.response);
-                    // Displays the result in the output
                     document.getElementById('output').value = j.result;
                 }
             };
-            // Builds the full URL for the function
             let url = avgwordURL + "/?text=" + encodeURI(document.getElementById('content').value);
-            // Configures the GET request
             xhttp.open("GET", url);
-            // Sends the request to the backend
             xhttp.send();
         }
 
         // Function that sends a GET request to the punctuation count service I made
         function PuncCount() {
             if (!ensure(puncCountURL, "PuncCount")) return;
-            // Creates a new XMLHttpRequest object
             let xhttp = new XMLHttpRequest();
-            // Defines what happens when the server response is ready
             xhttp.onreadystatechange = function () {
-                // Checks if the request is complete and works
                 if (this.readyState == 4 && this.status == 200) {
-                    // Parses the JSON response from the backend
                     var j = JSON.parse(this.response);
-                    // Displays the result only in the output
                     document.getElementById('output').value = j.result;
                 }
             };
-            // Builds the full URL for the punctuation count function
             let url = puncCountURL + "/?text=" + encodeURI(document.getElementById('content').value);
-            // Configures the GET request
             xhttp.open("GET", url);
-            // Sends the request to the backend
             xhttp.send();
         }
 
         // Function that sends a GET request to the longest word service I made
         function LongestWord() {
             if (!ensure(longestwordURL, "LongestWord")) return;
-            // Creates a new XMLHttpRequest object
             let xhttp = new XMLHttpRequest();
-            // Defines what happens when the server response is ready
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4) {
                     try {
                         var j = JSON.parse(this.response);
                         if (this.status == 200) {
-                            // Displays the result in the output
                             document.getElementById('output').value = j.result;
                         } else {
-                            // Displays a clear error if the service failed
                             document.getElementById('output').value = j.error || "Service unavailable";
                         }
                     } catch (e) {
-                        // Handles completely unexpected responses
                         document.getElementById('output').value = "Unexpected error";
                     }
                 }
             };
-            // Builds the full URL for the longest word function
             let url = longestwordURL + "/?text=" + encodeURI(document.getElementById('content').value);
-            // Configures and sends the GET request
             xhttp.open("GET", url);
             xhttp.send();
         }
