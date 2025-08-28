@@ -1,0 +1,6 @@
+{
+  "vowelcountURL": "http://localhost:8088/vowelcount",
+  "avgwordURL":    "http://localhost:8088/avgword",
+  "puncCountURL":  "http://localhost:8088/puncount",
+  "longestwordURL":"http://localhost:8088/longestword"
+}

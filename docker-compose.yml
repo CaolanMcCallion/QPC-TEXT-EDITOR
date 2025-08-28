@@ -1,0 +1,33 @@
+version: '3'
+services:
+  frontend:
+    build: ./src
+    ports:
+      - "80:80"
+    depends_on:
+      - longestword
+      - wordavg
+      - puncount
+      - vowelcount
+
+  longestword:
+    build: ./editor-longestword
+    ports:
+      - "8083:80"   # was 5001:80
+
+  wordavg:
+    build: ./editor-wordavg
+    ports:
+      - "8081:80"   # was 5002:80
+
+  puncount:
+    build: ./editor-puncount
+    ports:
+      - "8082:80"   # was 5003:80
+
+  vowelcount:
+    build: ./editor-vowelcount
+    ports:
+      - "8080:80"   # was 5004:80
+    volumes:
+      - ./editor-vowelcount:/app
